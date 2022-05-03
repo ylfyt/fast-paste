@@ -1,9 +1,12 @@
+import Container from "./components/container";
 import Home from "./pages/home";
 
 function App() {
   return (
     <div className="App">
-      <Home />
+      <Container>
+        <Home />
+      </Container>
     </div>
   );
 }

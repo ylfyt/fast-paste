@@ -1,7 +1,9 @@
+import ChatRoom from "../components/chat-room";
+
 const Home = () => {
   return (
-    <div>
-      <p>Home</p>
+    <div className="w-full">
+      <ChatRoom />
     </div>
   );
 };
