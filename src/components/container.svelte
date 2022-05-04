@@ -1,9 +1,9 @@
 <div class="container">
-  <slot/>
+	<slot />
 </div>
 
 <style>
-.container{
-  width: 80%;
-}
+	.container {
+		width: 80%;
+	}
 </style>
