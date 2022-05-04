@@ -3,6 +3,7 @@
 	import { db } from '../utils/firebase';
 	import moment from 'moment';
 	import type { Paste } from '../utils/interfaces';
+	import { onDestroy } from 'svelte';
 
 	export let roomId: string;
 
@@ -19,6 +20,10 @@
 			});
 		});
 		updatePastes(data);
+	});
+
+	onDestroy(() => {
+		unSub();
 	});
 
 	let text = '';
