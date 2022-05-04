@@ -30,6 +30,5 @@
 		min-height: 100vh;
 		display: flex;
 		justify-content: center;
-		background-color: #121212;
 	}
 </style>
