@@ -46,5 +46,13 @@
 		align-items: center;
 		gap: 20px;
 		color: white;
+		min-height: 100vh;
+	}
+
+	@media (max-width: 600px) {
+		.room {
+			justify-content: start;
+			min-height: 50vh;
+		}
 	}
 </style>

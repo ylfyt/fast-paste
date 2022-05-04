@@ -31,4 +31,10 @@
 		display: flex;
 		justify-content: center;
 	}
+
+	@media (max-width: 600px) {
+		.app {
+			min-height: 50vh;
+		}
+	}
 </style>

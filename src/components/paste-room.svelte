@@ -41,20 +41,26 @@
 			currentTarget: EventTarget & HTMLButtonElement;
 		}
 	) => {
-		navigator.clipboard.writeText(text);
 		const element = e.currentTarget;
-		element.style.backgroundColor = '#00FF00';
-		setTimeout(() => {
-			element.style.backgroundColor = '#E5E5E5';
-		}, 1000);
+		navigator.clipboard.writeText(text).then(
+			() => {
+				element.style.backgroundColor = '#00FF00';
+				setTimeout(() => {
+					element.style.backgroundColor = '#E5E5E5';
+				}, 1000);
+			},
+			() => {
+				alert('Failed to copy');
+			}
+		);
 	};
 </script>
 
 <svelte:head>
 	<title>Paste Room: {roomId}</title>
 </svelte:head>
-<div class="chat-room">
-	<p>Room Id: {roomId}</p>
+<div class="paste-room">
+	<p class="room-title">Room Id: {roomId}</p>
 	<div class="paste-container">
 		{#if myRoom}
 			{#if myRoom.pastes.length != 0}
@@ -81,14 +87,18 @@
 </div>
 
 <style>
-	.chat-room {
-		width: 500px;
+	.paste-room {
+		width: 70%;
 		height: 90vh;
 		background-color: rgb(206, 206, 206);
-		margin-top: 50px;
 		color: black;
 		display: flex;
 		flex-direction: column;
+		border-radius: 10px;
+	}
+
+	.room-title {
+		padding: 5px 10px;
 	}
 
 	.form-container {
@@ -159,5 +169,17 @@
 	.paste .text {
 		font-size: small;
 		overflow-wrap: break-word;
+	}
+
+	@media (max-width: 960px) {
+		.paste-room {
+			width: 100%;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.paste-room {
+			border-radius: 0;
+		}
 	}
 </style>
