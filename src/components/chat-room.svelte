@@ -4,7 +4,8 @@
 	import moment from 'moment';
 	import type { Paste } from '../utils/interfaces';
 
-	const roomId = '1';
+	export let roomId: string;
+
 	const pasteRef = collection(db, 'pastes') as CollectionReference<Paste>;
 	const pasteQuery = query(pasteRef, orderBy('createAt'), where('roomId', '==', roomId));
 
@@ -32,7 +33,6 @@
 			const docRef = await addDoc(pasteRef, {
 				roomId: roomId,
 				text: text,
-				userId: '',
 				createAt: Math.round(Date.now() / 1000),
 			});
 			text = '';
@@ -42,7 +42,8 @@
 	};
 </script>
 
-<div class="room">
+<div class="chat-room">
+	<p>Room Id: {roomId}</p>
 	<div class="paste-container">
 		<ul>
 			{#if pastes.length !== 0}
@@ -66,23 +67,30 @@
 </div>
 
 <style>
-	.room {
+	.chat-room {
 		width: 300px;
-		height: 400px;
-		background-color: gray;
-		position: relative;
+		height: 450px;
+		background-color: white;
+		margin-top: 50px;
+		color: black;
 	}
 
 	.form-container {
 		width: 100%;
-		position: absolute;
-		bottom: 0;
+		padding: 2px;
+		background-color: gray;
 	}
 	.form-container form {
 		display: flex;
 	}
 	.form-container input {
 		width: 100%;
+	}
+
+	.paste-container {
+		background-color: rgb(236, 236, 236);
+		height: 100%;
+		text-align: end;
 	}
 
 	ul {
