@@ -56,6 +56,9 @@
 	};
 </script>
 
+<svelte:head>
+	<title>Paste Room: {roomId}</title>
+</svelte:head>
 <div class="chat-room">
 	<p>Room Id: {roomId}</p>
 	<div class="paste-container">
