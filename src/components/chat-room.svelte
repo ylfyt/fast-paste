@@ -58,22 +58,17 @@
 	</div>
 	<div class="form-container">
 		<form on:submit|preventDefault={() => sendPaste()}>
-			<input type="text" bind:value={text} placeholder="Text" />
+			<textarea type="text" bind:value={text} placeholder="Text" />
 			<button type="submit">send</button>
 		</form>
 	</div>
 </div>
 
 <style>
-	#dummy {
-		background-color: red;
-		width: 100px;
-		height: 100px;
-	}
 	.chat-room {
-		width: 400px;
-		height: 600px;
-		background-color: white;
+		width: 500px;
+		height: 90vh;
+		background-color: rgb(206, 206, 206);
 		margin-top: 50px;
 		color: black;
 		display: flex;
@@ -83,17 +78,17 @@
 	.form-container {
 		width: 100%;
 		padding: 10px 20px;
-		background-color: gray;
 	}
 	.form-container form {
 		display: flex;
 		gap: 10px;
 	}
-	.form-container input {
+	.form-container textarea {
 		border: none;
 		width: 100%;
 		padding: 5px 10px;
 		border-radius: 10px;
+		resize: none;
 	}
 
 	button {
@@ -101,22 +96,23 @@
 	}
 
 	.paste-container {
-		background-color: rgb(236, 236, 236);
+		background-color: wheat;
 		height: 100%;
-		text-align: end;
 		display: flex;
 		flex-direction: column;
-		gap: 5px;
+		gap: 15px;
 		overflow-y: scroll;
+		overflow-x: hidden;
 		padding-bottom: 10px;
 		padding-top: 10px;
 	}
 
 	.paste {
-		margin-right: 5px;
-		margin-left: 5px;
+		margin-right: 10px;
+		margin-left: 10px;
 		border-radius: 10px;
 		padding: 5px 10px;
+		background-color: white;
 		box-shadow: 2px 3px rgba(0, 0, 0, 0.2);
 	}
 
@@ -127,5 +123,6 @@
 
 	.paste .text {
 		font-size: small;
+		overflow-wrap: break-word;
 	}
 </style>
