@@ -1,7 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.App {
-  @apply min-h-screen flex justify-center items-center;
-}
