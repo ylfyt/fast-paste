@@ -2,19 +2,22 @@
 	import { nanoid } from 'nanoid';
 	import { useNavigate } from 'svelte-navigator';
 	import { setDoc, doc } from 'firebase/firestore';
-	import { db } from '../utils/firebase';
 	import { onMount } from 'svelte';
+	import { db } from '../utils/firebase';
+	import type { IRoom } from '../utils/interfaces';
 
 	const navigate = useNavigate();
 	let roomId = '';
 
 	const createNewRoom = async () => {
 		const newRoomId = nanoid(6);
+		const newRoom: IRoom = {
+			pastes: [],
+			userId: '',
+		};
 		const roomRef = doc(db, 'rooms', newRoomId);
 		try {
-			await setDoc(roomRef, {
-				userId: '',
-			});
+			await setDoc(roomRef, newRoom);
 			prevRooms.push(newRoomId);
 			localStorage.setItem('rooms', JSON.stringify(prevRooms));
 			navigate(`/${newRoomId}`);

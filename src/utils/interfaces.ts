@@ -1,11 +1,11 @@
-export type Paste = {
-	id?: string;
+export interface IPaste {
+	id: string;
 	createAt: number;
-	roomId: string;
 	text: string;
-};
+}
 
-export type Room = {
+export interface IRoom {
 	id?: string;
 	userId: string;
-};
+	pastes: IPaste[];
+}

@@ -3,7 +3,7 @@
 
 	import Container from './components/container.svelte';
 	import Home from './pages/home.svelte';
-	import Room from './pages/room.svelte';
+	import Paste from './pages/paste.svelte';
 </script>
 
 <Router>
@@ -14,7 +14,7 @@
 					<Home />
 				</Route>
 				<Route path=":id">
-					<Room />
+					<Paste />
 				</Route>
 			</Route>
 		</Container>

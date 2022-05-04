@@ -1,45 +1,34 @@
 <script lang="ts">
-	import { collection, where, query, addDoc, orderBy, onSnapshot, CollectionReference } from 'firebase/firestore';
-	import { db } from '../utils/firebase';
-	import moment from 'moment';
-	import type { Paste } from '../utils/interfaces';
+	import { onSnapshot, DocumentReference, doc, setDoc } from 'firebase/firestore';
 	import { onDestroy } from 'svelte';
+	import { nanoid } from 'nanoid';
+	import moment from 'moment';
+	import { db } from '../utils/firebase';
+	import type { IRoom } from '../utils/interfaces';
 
 	export let roomId: string;
 
-	const pasteRef = collection(db, 'pastes') as CollectionReference<Paste>;
-	const pasteQuery = query(pasteRef, orderBy('createAt'), where('roomId', '==', roomId));
-
-	let pastes: Paste[] = [];
-	const unSub = onSnapshot(pasteQuery, (snap) => {
-		let data = [];
-		snap.forEach((doc) => {
-			data.push({
-				...doc.data(),
-				id: doc.id,
-			});
-		});
-		updatePastes(data);
+	let myRoom: IRoom | null = null;
+	const roomRef = doc(db, 'rooms', roomId) as DocumentReference<IRoom>;
+	const roomUnSub = onSnapshot(roomRef, (doc) => {
+		myRoom = doc.data();
 	});
 
 	onDestroy(() => {
-		unSub();
+		roomUnSub();
 	});
 
 	let text = '';
 
-	const updatePastes = (data: Paste[]) => {
-		pastes = [...data];
-	};
-
 	const sendPaste = async () => {
 		if (text === '') return;
 		try {
-			await addDoc(pasteRef, {
-				roomId: roomId,
-				text: text,
+			myRoom.pastes.push({
 				createAt: Math.round(Date.now() / 1000),
+				text: text,
+				id: nanoid(),
 			});
+			await setDoc(roomRef, myRoom);
 			text = '';
 		} catch (error) {
 			console.log(error);
@@ -67,16 +56,20 @@
 <div class="chat-room">
 	<p>Room Id: {roomId}</p>
 	<div class="paste-container">
-		{#if pastes.length !== 0}
-			{#each pastes as paste}
-				<div class="paste">
-					<div class="date">{moment.unix(paste.createAt).format('DD-MM-YYYY HH:mm:ss')}</div>
-					<div class="text">{paste.text}</div>
-					<button class="copy-button" on:click={(e) => copyText(paste.text, e)}>copy to clipboard</button>
-				</div>
-			{/each}
+		{#if myRoom}
+			{#if myRoom.pastes.length != 0}
+				{#each myRoom.pastes as paste}
+					<div class="paste">
+						<div class="date">{moment.unix(paste.createAt).format('DD-MM-YYYY HH:mm:ss')}</div>
+						<div class="text">{paste.text}</div>
+						<button class="copy-button" on:click={(e) => copyText(paste.text, e)}>copy to clipboard</button>
+					</div>
+				{/each}
+			{:else}
+				<p>There is no data</p>
+			{/if}
 		{:else}
-			<p>There is no data</p>
+			<p>Loading...</p>
 		{/if}
 	</div>
 	<div class="form-container">
