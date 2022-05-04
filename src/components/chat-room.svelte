@@ -30,7 +30,7 @@
 	const sendPaste = async () => {
 		if (text === '') return;
 		try {
-			const docRef = await addDoc(pasteRef, {
+			await addDoc(pasteRef, {
 				roomId: roomId,
 				text: text,
 				createAt: Math.round(Date.now() / 1000),
@@ -39,6 +39,20 @@
 		} catch (error) {
 			console.log(error);
 		}
+	};
+
+	const copyText = (
+		text: string,
+		e: MouseEvent & {
+			currentTarget: EventTarget & HTMLButtonElement;
+		}
+	) => {
+		navigator.clipboard.writeText(text);
+		const element = e.currentTarget;
+		element.style.backgroundColor = '#00FF00';
+		setTimeout(() => {
+			element.style.backgroundColor = '#E5E5E5';
+		}, 1000);
 	};
 </script>
 
@@ -50,6 +64,7 @@
 				<div class="paste">
 					<div class="date">{moment.unix(paste.createAt).format('DD-MM-YYYY HH:mm:ss')}</div>
 					<div class="text">{paste.text}</div>
+					<button class="copy-button" on:click={(e) => copyText(paste.text, e)}>copy to clipboard</button>
 				</div>
 			{/each}
 		{:else}
@@ -114,6 +129,25 @@
 		padding: 5px 10px;
 		background-color: white;
 		box-shadow: 2px 3px rgba(0, 0, 0, 0.2);
+		display: flex;
+		flex-direction: column;
+	}
+
+	.copy-button {
+		margin-left: auto;
+		padding: 2px 0;
+		width: 150px;
+		font-size: x-small;
+		box-shadow: 2px 3px rgba(0, 0, 0, 0.2);
+		border-radius: 5px;
+		border: none;
+	}
+
+	.copy-button:focus {
+		border: none;
+	}
+	.copy-button:active {
+		box-shadow: none;
 	}
 
 	.paste .date {
