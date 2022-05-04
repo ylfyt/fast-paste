@@ -45,7 +45,6 @@
 		justify-content: center;
 		align-items: center;
 		gap: 20px;
-		color: white;
 		min-height: 100vh;
 	}
 
