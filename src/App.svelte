@@ -6,7 +6,7 @@
 	import Room from './pages/room.svelte';
 </script>
 
-<Router basepath="/fast-paste">
+<Router>
 	<main class="app">
 		<Container>
 			<Route path="/*" primary={false}>
