@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ChatRoom from '../components/chat-room.svelte';
+	import PasteRoom from '../components/paste-room.svelte';
 	import { onMount } from 'svelte';
 	import { useParams, useNavigate, Link } from 'svelte-navigator';
 	import { getDoc, doc } from 'firebase/firestore';
@@ -31,7 +31,7 @@
 	{#if loading}
 		<p>Loading...</p>
 	{:else if error === ''}
-		<ChatRoom {roomId} />
+		<PasteRoom {roomId} />
 	{:else}
 		<p>{error}</p>
 		<Link to="/">back to home</Link>
