@@ -67,7 +67,7 @@
 	</form>
 
 	<div class="new">
-		<button disabled={loading} class="new-button" on:click={() => createNewRoom()}>Get New Room</button>
+		<button disabled={loading} class="new-button" on:click={() => createNewRoom()}>Create New Room</button>
 		{#if loading}
 			<p>Please wait...</p>
 		{:else if error !== ''}
