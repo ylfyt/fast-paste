@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Router, Link, Route, useFocus } from 'svelte-navigator';
+	import { Router, Route } from 'svelte-navigator';
 
 	import Container from './components/container.svelte';
 	import Home from './pages/home.svelte';
