@@ -165,11 +165,13 @@
 	.paste .date {
 		text-align: start;
 		font-size: x-small;
+		color: var(--whiteColor);
 	}
 
 	.paste .text {
 		font-size: small;
 		overflow-wrap: break-word;
+		white-space: pre-wrap;
 	}
 
 	@media (max-width: 960px) {
