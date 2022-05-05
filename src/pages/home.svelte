@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import { db } from '../utils/firebase';
 	import type { IRoom } from '../utils/interfaces';
+	import SendButton from '../components/send-button.svelte';
 
 	const navigate = useNavigate();
 	let roomId = '';
@@ -61,13 +62,13 @@
 		}}
 	>
 		<input type="text" placeholder="room id" bind:value={roomId} />
-		<button disabled={loading} type="submit">GO</button>
+		<SendButton type="submit" isBusy={loading} disabled={loading || roomId === ''} />
 	</form>
 
 	<div class="new">
 		<button disabled={loading} class="new-button" on:click={() => createNewRoom()}>Create New Room</button>
 		{#if loading}
-			<p>Please wait...</p>
+			<p class="loading-message">Please wait...</p>
 		{:else if error !== ''}
 			<p>{error}</p>
 		{/if}
@@ -100,6 +101,11 @@
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		color: var(--color0);
+	}
+
+	:global(a) {
+		color: var(--color0);
 	}
 
 	.prev-room {
@@ -109,6 +115,11 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		color: var(--color1);
+	}
+
+	.loading-message {
+		color: var(--color0);
 	}
 
 	.prev-title {
@@ -117,10 +128,10 @@
 	}
 
 	.new-button {
-		background-color: rgb(7, 255, 7);
+		background-color: var(--color1);
 		padding: 10px 20px;
 		border: none;
-		box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.2);
+		box-shadow: 2px 4px 20px var(--darkShadow);
 		border-radius: 10px;
 		font-size: medium;
 		font-weight: 500;
@@ -148,23 +159,12 @@
 		font-weight: 600;
 		border-radius: 10px;
 		text-align: center;
-	}
-
-	form button {
-		padding: 5px 20px;
-		background-color: orange;
-		font-size: medium;
-		font-weight: 500;
 		border: none;
-		border-radius: 10px;
-		box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.2);
+		background-color: var(--color0);
+		box-shadow: 2px 4px 20px var(--darkShadow);
 	}
 
-	form button:hover {
-		cursor: pointer;
-	}
-
-	form button:active {
-		box-shadow: none;
+	form input:focus {
+		outline: 3px solid var(--color1);
 	}
 </style>

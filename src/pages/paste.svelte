@@ -53,7 +53,7 @@
 
 <div class="room">
 	{#if loading}
-		<p>Loading...</p>
+		<p class="loading-message">Loading...</p>
 	{:else if error === ''}
 		<PasteRoom {roomId} />
 	{:else}
@@ -70,6 +70,10 @@
 		align-items: center;
 		gap: 20px;
 		min-height: 100vh;
+	}
+
+	.loading-message {
+		color: var(--color0);
 	}
 
 	@media (max-width: 600px) {

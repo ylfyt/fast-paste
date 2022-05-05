@@ -5,6 +5,7 @@
 	import { db } from '../utils/firebase';
 	import type { IRoom } from '../utils/interfaces';
 	import Input from './input.svelte';
+	import { Link } from 'svelte-navigator';
 
 	export let roomId: string;
 
@@ -22,15 +23,15 @@
 		text: string,
 		e: MouseEvent & {
 			currentTarget: EventTarget & HTMLButtonElement;
-		}
+		},
+		idx: number
 	) => {
-		const element = e.currentTarget;
 		navigator.clipboard.writeText(text).then(
 			() => {
-				element.style.backgroundColor = '#00FF00';
-				setTimeout(() => {
-					element.style.backgroundColor = '#E5E5E5';
-				}, 1000);
+				const message = document.getElementById(`copy-message-${idx}`);
+				if (message) {
+					message.style.display = 'block';
+				}
 			},
 			() => {
 				alert('Failed to copy');
@@ -43,15 +44,21 @@
 	<title>Paste Room: {roomId}</title>
 </svelte:head>
 <div class="paste-room">
-	<p class="room-title">Room Id: {roomId}</p>
+	<div class="room-title">
+		<p>Room Id: {roomId}</p>
+		<Link to="/">Home</Link>
+	</div>
 	<div class="paste-container">
 		{#if myRoom}
 			{#if myRoom.pastes.length != 0}
-				{#each myRoom.pastes as paste}
+				{#each myRoom.pastes as paste, idx}
 					<div class="paste">
 						<div class="date">{moment.unix(paste.createAt).format('DD-MM-YYYY HH:mm:ss')}</div>
 						<div class="text">{paste.text}</div>
-						<button class="copy-button" on:click={(e) => copyText(paste.text, e)}>copy to clipboard</button>
+						<div class="copy-text">
+							<p class="copy-message" id={`copy-message-${idx}`}>Copied</p>
+							<button class="copy-button" on:click={(e) => copyText(paste.text, e, idx)}>copy to clipboard</button>
+						</div>
 					</div>
 				{/each}
 			{:else}
@@ -68,15 +75,19 @@
 	.paste-room {
 		width: 70%;
 		height: 90vh;
-		background-color: rgb(206, 206, 206);
-		color: black;
+		background-color: var(--color4);
+		color: var(--color0);
 		display: flex;
 		flex-direction: column;
 		border-radius: 10px;
+		box-shadow: 2px 3px 20px var(--darkShadow);
 	}
 
 	.room-title {
 		padding: 5px 10px;
+		display: flex;
+		justify-content: space-between;
+		text-decoration: none;
 	}
 
 	button {
@@ -84,7 +95,7 @@
 	}
 
 	.paste-container {
-		background-color: wheat;
+		background-color: var(--color3);
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -95,27 +106,50 @@
 		padding-top: 10px;
 	}
 
+	.paste-container::-webkit-scrollbar {
+		width: 3px;
+	}
+	.paste-container::-webkit-scrollbar-thumb {
+		background-color: var(--color1);
+	}
+	.paste-container::-webkit-scrollbar-track {
+		background-color: var(--color0);
+	}
+
 	.paste {
 		margin-right: 10px;
 		margin-left: 10px;
 		border-radius: 10px;
 		padding: 5px 10px;
-		background-color: white;
-		box-shadow: 2px 3px rgba(0, 0, 0, 0.2);
+		background-color: var(--color2);
+		box-shadow: 2px 3px 10px var(--darkShadow);
 		display: flex;
 		flex-direction: column;
 	}
 
+	.copy-message {
+		font-size: x-small;
+		color: #0f0;
+		display: none;
+	}
+
+	.copy-text {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 10px;
+	}
+
 	.copy-button {
-		margin-left: auto;
 		padding: 2px 0;
 		width: 150px;
 		font-size: x-small;
-		box-shadow: 2px 3px rgba(0, 0, 0, 0.2);
+		box-shadow: 2px 3px 20px var(--darkShadow);
 		border-radius: 5px;
 		border: none;
+		background-color: var(--color4);
+		color: var(--color0);
 	}
-
 	.copy-button:focus {
 		border: none;
 	}

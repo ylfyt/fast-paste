@@ -47,7 +47,7 @@
 <div class="form-container">
 	<form on:submit|preventDefault={() => sendPaste()}>
 		<textarea bind:this={textAreaElement} rows="1" type="text" bind:value={text} placeholder="Text" />
-		<SendButton type="submit" disabled={text == '' || loading} isBusy={loading} backgroundColor="#F5DEB3" />
+		<SendButton type="submit" disabled={text == '' || loading} isBusy={loading} />
 	</form>
 </div>
 
@@ -55,6 +55,7 @@
 	.form-container {
 		width: 100%;
 		padding: 10px 20px;
+		box-shadow: 2px 4px 20px var(--darkShadow);
 	}
 	.form-container form {
 		display: flex;
@@ -69,12 +70,14 @@
 		resize: none;
 		max-height: 250px;
 		outline: none;
-		box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.2);
+		box-shadow: 2px 4px 20px var(--darkShadow);
 		font-weight: 400;
 		min-height: 40px;
+		background-color: var(--color0);
+		color: var(--blackColor);
 	}
 
 	textarea:focus {
-		outline: 3px solid wheat;
+		outline: 3px solid var(--color1);
 	}
 </style>

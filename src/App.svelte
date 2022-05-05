@@ -23,13 +23,25 @@
 
 <style>
 	:global(:root) {
-		--accent-color: rgba(204, 0, 0);
+		--color0: #ffead0;
+		--color1: #f76f8e;
+		--color2: #96616b;
+		--color3: #37505c;
+		--color4: #113537;
+		--blackColor: #000000;
+		--whiteColor: #ffffff;
+		--darkShadow: #00000033;
+		--lightShadow: #ffffff33;
 	}
 
 	.app {
 		min-height: 100vh;
 		display: flex;
 		justify-content: center;
+	}
+
+	:global(body) {
+		background-color: var(--color4);
 	}
 
 	@media (max-width: 600px) {

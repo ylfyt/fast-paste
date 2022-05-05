@@ -2,13 +2,12 @@
 	import LoadingIcon from './svg-icons/loading-icon.svelte';
 	import SendIcon from './svg-icons/send-icon.svelte';
 
-	export let backgroundColor: string;
 	export let type: string;
 	export let isBusy: boolean;
 	export let disabled: boolean;
 </script>
 
-<button {type} disabled={isBusy || disabled} style={`background-color: ${backgroundColor};`}>
+<button {type} disabled={isBusy || disabled}>
 	{#if isBusy}
 		<LoadingIcon />
 	{:else}
@@ -24,12 +23,13 @@
 		justify-content: center;
 		border-radius: 10px;
 		border: none;
-		box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.2);
+		box-shadow: 2px 4px 20px var(--darkShadow);
 		min-height: 40px;
+		background-color: var(--color1);
 	}
 
-	button:hover {
-		color: aqua;
+	button:enabled:hover {
+		background-color: var(--color2);
 		cursor: pointer;
 	}
 
