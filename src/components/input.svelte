@@ -71,7 +71,7 @@
 		max-height: 250px;
 		outline: none;
 		box-shadow: 2px 4px 20px var(--darkShadow);
-		font-weight: 400;
+		font-weight: 500;
 		min-height: 40px;
 		background-color: var(--color0);
 		color: var(--blackColor);

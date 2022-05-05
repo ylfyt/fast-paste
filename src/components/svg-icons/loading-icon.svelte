@@ -6,6 +6,6 @@
 
 <style>
 	svg {
-		fill: orange;
+		fill: var(--color0);
 	}
 </style>

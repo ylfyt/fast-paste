@@ -19,13 +19,17 @@
 		roomUnSub();
 	});
 
-	const copyText = (
-		text: string,
-		e: MouseEvent & {
-			currentTarget: EventTarget & HTMLButtonElement;
-		},
-		idx: number
-	) => {
+	$: myRoom && updateScroll();
+
+	let pasteContainerElement: HTMLDivElement;
+	const updateScroll = () => {
+		if (!pasteContainerElement) return;
+		setTimeout(() => {
+			pasteContainerElement.scrollTop = pasteContainerElement.scrollHeight;
+		}, 0);
+	};
+
+	const copyText = (text: string, idx: number) => {
 		navigator.clipboard.writeText(text).then(
 			() => {
 				const message = document.getElementById(`copy-message-${idx}`);
@@ -48,7 +52,7 @@
 		<p>Room Id: {roomId}</p>
 		<Link to="/">Home</Link>
 	</div>
-	<div class="paste-container">
+	<div bind:this={pasteContainerElement} class="paste-container">
 		{#if myRoom}
 			{#if myRoom.pastes.length != 0}
 				{#each myRoom.pastes as paste, idx}
@@ -57,7 +61,7 @@
 						<div class="text">{paste.text}</div>
 						<div class="copy-text">
 							<p class="copy-message" id={`copy-message-${idx}`}>Copied</p>
-							<button class="copy-button" on:click={(e) => copyText(paste.text, e, idx)}>copy to clipboard</button>
+							<button class="copy-button" on:click={(e) => copyText(paste.text, idx)}>copy to clipboard</button>
 						</div>
 					</div>
 				{/each}
@@ -65,7 +69,7 @@
 				<p style="text-align: center;">There is no data</p>
 			{/if}
 		{:else}
-			<p>Loading...</p>
+			<p style="text-align: center;">Loading...</p>
 		{/if}
 	</div>
 	<Input {roomId} />
@@ -104,6 +108,7 @@
 		overflow-x: hidden;
 		padding-bottom: 10px;
 		padding-top: 10px;
+		scroll-behavior: smooth;
 	}
 
 	.paste-container::-webkit-scrollbar {
