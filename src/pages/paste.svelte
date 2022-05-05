@@ -42,7 +42,7 @@
 		const roomDocRef = doc(db, 'rooms', roomId);
 		const roomSnap = await getDoc(roomDocRef);
 		if (!roomSnap.exists()) {
-			error = 'No room ' + roomId;
+			error = `Room "${roomId}" is Not Found!`;
 			verifyPrevRoom(true);
 		} else {
 			verifyPrevRoom(false);
@@ -57,7 +57,7 @@
 	{:else if error === ''}
 		<PasteRoom {roomId} />
 	{:else}
-		<p>{error}</p>
+		<p class="error-message">{error}</p>
 		<Link to="/">back to home</Link>
 	{/if}
 </div>
@@ -75,11 +75,20 @@
 	.loading-message {
 		color: var(--color0);
 	}
+	.error-message {
+		color: var(--color1);
+		font-size: x-large;
+		font-weight: 500;
+	}
 
 	@media (max-width: 600px) {
 		.room {
 			justify-content: start;
 			min-height: 50vh;
+		}
+
+		.error-message {
+			margin-top: auto;
 		}
 	}
 </style>
