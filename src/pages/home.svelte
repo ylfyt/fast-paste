@@ -33,8 +33,6 @@
 		const roomRef = doc(db, 'rooms', newRoomId);
 		try {
 			await setDoc(roomRef, newRoom);
-			prevRooms.push(newRoomId);
-			localStorage.setItem('rooms', JSON.stringify(prevRooms));
 			error = '';
 			loading = false;
 			navigate(`/${newRoomId}`);
@@ -78,9 +76,9 @@
 		<div class="prev-title">Previous Room</div>
 		<div class="prev-room-container">
 			<ul>
-				{#each prevRooms as room}
+				{#each prevRooms as _, idx}
 					<li>
-						<Link to={`/${room}`}>{room}</Link>
+						<Link to={`/${prevRooms[prevRooms.length - idx - 1]}`}>{prevRooms[prevRooms.length - idx - 1]}</Link>
 					</li>
 				{/each}
 			</ul>

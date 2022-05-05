@@ -16,12 +16,36 @@
 
 	let error = '';
 
+	const verifyPrevRoom = (shouldBeDeleted: boolean) => {
+		const roomJson = localStorage.getItem('rooms');
+		let prevRooms: string[] = [];
+		if (roomJson) {
+			prevRooms = JSON.parse(roomJson);
+		}
+		const roomExist = prevRooms.find((room) => room == roomId);
+		if (!roomExist) {
+			if (!shouldBeDeleted) {
+				prevRooms.push(roomId);
+				localStorage.setItem('rooms', JSON.stringify(prevRooms));
+			}
+			return;
+		}
+
+		if (shouldBeDeleted) {
+			const newPrevRoom = prevRooms.filter((room) => room != roomId);
+			localStorage.setItem('rooms', JSON.stringify(newPrevRoom));
+		}
+	};
+
 	onMount(async () => {
 		loading = true;
 		const roomDocRef = doc(db, 'rooms', roomId);
 		const roomSnap = await getDoc(roomDocRef);
 		if (!roomSnap.exists()) {
 			error = 'No room ' + roomId;
+			verifyPrevRoom(true);
+		} else {
+			verifyPrevRoom(false);
 		}
 		loading = false;
 	});
