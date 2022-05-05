@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { onSnapshot, DocumentReference, doc, setDoc } from 'firebase/firestore';
+	import { onSnapshot, DocumentReference, doc } from 'firebase/firestore';
 	import { onDestroy } from 'svelte';
-	import { nanoid } from 'nanoid';
 	import moment from 'moment';
 	import { db } from '../utils/firebase';
 	import type { IRoom } from '../utils/interfaces';
+	import Input from './input.svelte';
 
 	export let roomId: string;
 
@@ -17,23 +17,6 @@
 	onDestroy(() => {
 		roomUnSub();
 	});
-
-	let text = '';
-
-	const sendPaste = async () => {
-		if (text === '') return;
-		try {
-			myRoom.pastes.push({
-				createAt: Math.round(Date.now() / 1000),
-				text: text,
-				id: nanoid(),
-			});
-			await setDoc(roomRef, myRoom);
-			text = '';
-		} catch (error) {
-			console.log(error);
-		}
-	};
 
 	const copyText = (
 		text: string,
@@ -78,12 +61,7 @@
 			<p>Loading...</p>
 		{/if}
 	</div>
-	<div class="form-container">
-		<form on:submit|preventDefault={() => sendPaste()}>
-			<textarea type="text" bind:value={text} placeholder="Text" />
-			<button type="submit">send</button>
-		</form>
-	</div>
+	<Input {roomId} />
 </div>
 
 <style>
@@ -99,22 +77,6 @@
 
 	.room-title {
 		padding: 5px 10px;
-	}
-
-	.form-container {
-		width: 100%;
-		padding: 10px 20px;
-	}
-	.form-container form {
-		display: flex;
-		gap: 10px;
-	}
-	.form-container textarea {
-		border: none;
-		width: 100%;
-		padding: 5px 10px;
-		border-radius: 10px;
-		resize: none;
 	}
 
 	button {
