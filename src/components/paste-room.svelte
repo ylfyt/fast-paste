@@ -55,7 +55,7 @@
 					</div>
 				{/each}
 			{:else}
-				<p>There is no data</p>
+				<p style="text-align: center;">There is no data</p>
 			{/if}
 		{:else}
 			<p>Loading...</p>
@@ -142,6 +142,7 @@
 	@media (max-width: 600px) {
 		.paste-room {
 			border-radius: 0;
+			height: 93vh;
 		}
 	}
 </style>

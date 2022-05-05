@@ -23,16 +23,30 @@
 				pastes: arrayUnion(newPaste),
 			});
 			text = '';
+			updateTextarea(true);
 		} catch (error) {
 			console.log(error);
 		}
 		loading = false;
 	};
+
+	$: text && updateTextarea();
+
+	let textAreaElement: HTMLTextAreaElement;
+	const updateTextarea = (reset: boolean = false) => {
+		if (!textAreaElement) return;
+		if (reset) {
+			textAreaElement.style.height = '40px';
+			return;
+		}
+		textAreaElement.style.height = 'inherit';
+		textAreaElement.style.height = `${textAreaElement.scrollHeight}px`;
+	};
 </script>
 
 <div class="form-container">
 	<form on:submit|preventDefault={() => sendPaste()}>
-		<textarea type="text" bind:value={text} placeholder="Text" />
+		<textarea bind:this={textAreaElement} rows="1" type="text" bind:value={text} placeholder="Text" />
 		<SendButton type="submit" disabled={text == '' || loading} isBusy={loading} backgroundColor="#F5DEB3" />
 	</form>
 </div>
@@ -50,8 +64,17 @@
 	.form-container textarea {
 		border: none;
 		width: 100%;
-		padding: 5px 10px;
+		padding: 10px 10px;
 		border-radius: 10px;
 		resize: none;
+		max-height: 250px;
+		outline: none;
+		box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.2);
+		font-weight: 400;
+		min-height: 40px;
+	}
+
+	textarea:focus {
+		outline: 3px solid wheat;
 	}
 </style>

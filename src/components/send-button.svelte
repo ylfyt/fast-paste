@@ -25,6 +25,7 @@
 		border-radius: 10px;
 		border: none;
 		box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.2);
+		min-height: 40px;
 	}
 
 	button:hover {
