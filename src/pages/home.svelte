@@ -54,6 +54,9 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Easy Paste</title>
+</svelte:head>
 <div class="home">
 	<form
 		on:submit|preventDefault={() => {
