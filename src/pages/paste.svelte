@@ -90,5 +90,8 @@
 		.error-message {
 			margin-top: auto;
 		}
+		.loading-message {
+			margin-top: auto;
+		}
 	}
 </style>
