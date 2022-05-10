@@ -1,9 +1,14 @@
-import * as functions from "firebase-functions";
+import * as functions from 'firebase-functions';
+import { IRoom } from '../../src/utils/interfaces';
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+functions.firestore.document('rooms/{roomId}').onUpdate(async (doc, ctx) => {
+	const before = doc.before.data() as IRoom;
+	const after = doc.after.data() as IRoom;
+
+	if (before.pastes.length !== after.pastes.length && after.pastes.length > 0) {
+		after.pastes[after.pastes.length - 1].text += ' 😅';
+		await doc.after.ref.update({
+			pastes: after.pastes,
+		});
+	}
+});
