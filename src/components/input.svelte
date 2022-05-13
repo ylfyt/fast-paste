@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 	import { nanoid } from 'nanoid';
+	import { onMount } from 'svelte';
 	import { db } from '../utils/firebase';
 	import type { IPaste } from '../utils/interfaces';
 	import SendButton from './send-button.svelte';
@@ -42,6 +43,10 @@
 		textAreaElement.style.height = 'inherit';
 		textAreaElement.style.height = `${textAreaElement.scrollHeight}px`;
 	};
+
+	onMount(() => {
+		textAreaElement.focus();
+	});
 </script>
 
 <div class="form-container">
