@@ -1,12 +1,11 @@
 <script lang="ts">
 	import PasteRoom from '../components/paste-room.svelte';
 	import { onMount } from 'svelte';
-	import { useParams, useNavigate, Link } from 'svelte-navigator';
+	import { useParams, navigate, Link } from 'svelte-navigator';
 	import { getDoc, doc } from 'firebase/firestore';
 	import { db } from '../utils/firebase';
 
 	const params = useParams();
-	const navigate = useNavigate();
 	let roomId: string | undefined = $params.id;
 	let loading = true;
 

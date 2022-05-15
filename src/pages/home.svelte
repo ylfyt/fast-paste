@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { useNavigate, Link } from 'svelte-navigator';
+	import { navigate, Link } from 'svelte-navigator';
 	import { onMount } from 'svelte';
 
 	import SendButton from '../components/send-button.svelte';
 	import SigninWithGoogle from '../components/signin-with-google.svelte';
 	import createRoom from '../utils/create-room';
 
-	const navigate = useNavigate();
 	let roomId = '';
 	let loading = false;
 	let errorMessage = '';

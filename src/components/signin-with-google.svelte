@@ -3,10 +3,8 @@
 
 	import { auth } from '../utils/firebase';
 	import { userRoomId, authUser } from '../stores/user-store';
-	import { useNavigate } from 'svelte-navigator';
+	import { navigate } from 'svelte-navigator';
 	import createRoom from '../utils/create-room';
-
-	const navigate = useNavigate();
 
 	const loginWithGoogle = async () => {
 		const provider = new GoogleAuthProvider();
