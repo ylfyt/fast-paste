@@ -3,29 +3,15 @@
 	import { useNavigate, Link } from 'svelte-navigator';
 	import { setDoc, doc, getDoc, collection, where, query, getDocs } from 'firebase/firestore';
 	import { onMount } from 'svelte';
+	import type { User } from 'firebase/auth';
+
 	import { db } from '../utils/firebase';
 	import type { IRoom } from '../utils/interfaces';
 	import SendButton from '../components/send-button.svelte';
-
-	import { auth } from '../utils/firebase';
-
-	import { signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+	import SigninWithGoogle from '../components/signin-with-google.svelte';
 
 	export let user: User;
-	const loginWithGoogle = async () => {
-		const provider = new GoogleAuthProvider();
-		signInWithPopup(auth, provider)
-			.then((result) => {
-				console.log('Login Success');
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
-
-	const logout = async () => {
-		await auth.signOut();
-	};
+	export let myRoomId: string | null;
 
 	const openMyRoom = async () => {
 		const roomId = await checkRoomExistByUserId(user.uid);
@@ -107,18 +93,6 @@
 		<input type="text" placeholder="room id" bind:value={roomId} />
 		<SendButton type="submit" isBusy={loading} disabled={loading || roomId === ''} />
 	</form>
-	<div class="auth">
-		{#if user}
-			<button on:click={() => logout()}>Logout</button>
-			<button
-				on:click={() => {
-					openMyRoom();
-				}}>Open My Room</button
-			>
-		{:else}
-			<button on:click={() => loginWithGoogle()}>Login</button>
-		{/if}
-	</div>
 	<div class="new">
 		<button disabled={loading} class="new-button" on:click={() => createNewRoom()}>Create New Room</button>
 		{#if loading}
@@ -126,6 +100,10 @@
 		{:else if error !== ''}
 			<p>{error}</p>
 		{/if}
+	</div>
+	<div class="auth-container">
+		<div class="or-text">or</div>
+		<SigninWithGoogle {user} {openMyRoom} {myRoomId} />
 	</div>
 	<div class="prev-room">
 		<div class="prev-title">Previous Room</div>
@@ -150,7 +128,16 @@
 		margin-top: 100px;
 		gap: 40px;
 	}
-
+	.auth-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	.or-text {
+		margin-bottom: 10px;
+		color: var(--color0);
+	}
 	.prev-room-container {
 		display: flex;
 		flex-direction: column;

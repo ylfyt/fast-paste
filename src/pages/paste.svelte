@@ -50,7 +50,7 @@
 			}
 		} catch (err) {
 			if (err.message.includes('insufficient permissions')) {
-				errorMessage = "You Doesn't Have Permissions To Open This Room";
+				errorMessage = "You Don't Have Permissions To Open This Room";
 				verifyPrevRoom(true);
 			} else {
 				errorMessage = 'Something Wrong!!';
@@ -89,6 +89,7 @@
 		color: var(--color1);
 		font-size: x-large;
 		font-weight: 500;
+		text-align: center;
 	}
 
 	@media (max-width: 600px) {
