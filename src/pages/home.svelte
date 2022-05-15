@@ -1,76 +1,27 @@
 <script lang="ts">
-	import { nanoid } from 'nanoid';
 	import { useNavigate, Link } from 'svelte-navigator';
-	import { setDoc, doc, getDoc, collection, where, query, getDocs } from 'firebase/firestore';
 	import { onMount } from 'svelte';
-	import type { User } from 'firebase/auth';
 
-	import { db } from '../utils/firebase';
-	import type { IRoom } from '../utils/interfaces';
 	import SendButton from '../components/send-button.svelte';
 	import SigninWithGoogle from '../components/signin-with-google.svelte';
-
-	export let user: User;
-	export let myRoomId: string | null;
-
-	const openMyRoom = async () => {
-		const roomId = await checkRoomExistByUserId(user.uid);
-		if (roomId == '') {
-			await createNewRoom(user.uid);
-			return;
-		}
-		navigate(`/${roomId}`);
-	};
+	import createRoom from '../utils/create-room';
 
 	const navigate = useNavigate();
 	let roomId = '';
 	let loading = false;
-	let error = '';
+	let errorMessage = '';
 
-	const checkRoomExistByUserId = async (userId: string): Promise<string> => {
-		try {
-			const q = query(collection(db, 'rooms'), where('userId', '==', userId));
-			const roomSnap = await getDocs(q);
-			return roomSnap.empty ? '' : roomSnap.docs[0].id;
-		} catch (error) {
-			console.log(error.message);
-			return '';
-		}
-	};
-
-	const checkRoomExist = async (newRoomId: string): Promise<boolean> => {
-		const roomDocRef = doc(db, 'rooms', newRoomId);
-		const roomSnap = await getDoc(roomDocRef);
-		return roomSnap.exists();
-	};
-
-	const createNewRoom = async (userId: string | null = null) => {
+	const createNewRoom = async () => {
 		loading = true;
-		const newRoomId = nanoid(6);
-		const exist = await checkRoomExist(newRoomId);
-		if (exist) {
-			error = 'Failed to create new Room. Try Again!';
-			loading = false;
-			return;
-		}
-		const newRoom: IRoom = {
-			pastes: [],
-			userId: userId ?? '',
-		};
-		const roomRef = doc(db, 'rooms', newRoomId);
-		try {
-			await setDoc(roomRef, newRoom);
-			error = '';
-			loading = false;
-			navigate(`/${newRoomId}`);
-		} catch (error) {
-			error = 'Failed to create new Room. Try Again!';
-			loading = false;
+		const { error, roomId } = await createRoom();
+		loading = false;
+		errorMessage = error;
+		if (roomId !== '') {
+			navigate(`/${roomId}`);
 		}
 	};
 
 	let prevRooms: string[] = [];
-
 	onMount(() => {
 		const rooms = localStorage.getItem('rooms');
 		if (!rooms) {
@@ -97,13 +48,13 @@
 		<button disabled={loading} class="new-button" on:click={() => createNewRoom()}>Create New Room</button>
 		{#if loading}
 			<p class="loading-message">Please wait...</p>
-		{:else if error !== ''}
-			<p>{error}</p>
+		{:else if errorMessage !== ''}
+			<p>{errorMessage}</p>
 		{/if}
 	</div>
 	<div class="auth-container">
 		<div class="or-text">or</div>
-		<SigninWithGoogle {user} {openMyRoom} {myRoomId} />
+		<SigninWithGoogle />
 	</div>
 	<div class="prev-room">
 		<div class="prev-title">Previous Room</div>

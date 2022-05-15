@@ -9,3 +9,8 @@ export interface IRoom {
 	userId: string;
 	pastes: IPaste[];
 }
+
+export interface ICreateRoom {
+	error: string;
+	roomId: string;
+}

@@ -1,16 +1,13 @@
 <script lang="ts">
-	import { signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+	import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 	import { auth } from '../utils/firebase';
-
-	export let user: User;
-	export let myRoomId: string | null;
-	export let openMyRoom: () => void;
+	import { userRoomId, authUser } from '../stores/user-store';
 
 	const loginWithGoogle = async () => {
 		const provider = new GoogleAuthProvider();
 		signInWithPopup(auth, provider)
-			.then((result) => {
+			.then(() => {
 				console.log('Login Success');
 			})
 			.catch((error) => {
@@ -19,24 +16,20 @@
 	};
 
 	const logout = async () => {
-		await auth.signOut();
+		auth.currentUser && (await auth.signOut());
 	};
 </script>
 
 <div class="auth">
-	{#if user}
+	{#if $authUser}
 		<button on:click={() => logout()}>Logout</button>
-		<button
-			on:click={() => {
-				openMyRoom();
-			}}
-		>
-			{#if myRoomId === null}
+		<button on:click={() => {}}>
+			{#if $userRoomId === null}
 				Create My Room
-			{:else if myRoomId === ''}
+			{:else if $userRoomId === ''}
 				Please Wait...
 			{:else}
-				Open My Room ({myRoomId})
+				Open My Room ({$userRoomId})
 			{/if}
 		</button>
 	{:else}

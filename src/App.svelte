@@ -1,37 +1,21 @@
 <script lang="ts">
 	import { Router, Route } from 'svelte-navigator';
-	import { onAuthStateChanged, User } from 'firebase/auth';
-	import { query, collection, where, getDocs } from 'firebase/firestore';
+	import { onAuthStateChanged } from 'firebase/auth';
 
 	import Container from './components/container.svelte';
 	import Home from './pages/home.svelte';
 	import Paste from './pages/paste.svelte';
-	import { auth, db } from './utils/firebase';
+	import { auth } from './utils/firebase';
+	import { authUser, userRoomId } from './stores/user-store';
+	import verifyUserRoom from './utils/verify-user-room';
 
-	let authUser: User;
-	let myRoomId: string | null = null;
 	onAuthStateChanged(auth, async (user) => {
-		authUser = user;
+		authUser.set(user);
+		userRoomId.set(null);
 		if (user) {
-			myRoomId = '';
-			const roomId = await checkRoomExistByUserId(user.uid);
-			// TODO: Create New Room if user room doesn't exist
-			myRoomId = roomId === '' ? null : roomId;
-		} else {
-			myRoomId = null;
+			verifyUserRoom(user.uid);
 		}
 	});
-
-	const checkRoomExistByUserId = async (userId: string): Promise<string> => {
-		try {
-			const q = query(collection(db, 'rooms'), where('userId', '==', userId));
-			const roomSnap = await getDocs(q);
-			return roomSnap.empty ? '' : roomSnap.docs[0].id;
-		} catch (error) {
-			console.log(error.message);
-			return '';
-		}
-	};
 </script>
 
 <Router>
@@ -39,7 +23,7 @@
 		<Container>
 			<Route path="/*" primary={false}>
 				<Route path="/">
-					<Home user={authUser} {myRoomId} />
+					<Home />
 				</Route>
 				<Route path=":id">
 					<Paste />
