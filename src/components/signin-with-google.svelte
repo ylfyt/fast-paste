@@ -47,7 +47,7 @@
 			{/if}
 		</button>
 	{:else}
-		<button on:click={() => loginWithGoogle()}>Login</button>
+		<button on:click={() => loginWithGoogle()}>Login With Google</button>
 	{/if}
 </div>
 

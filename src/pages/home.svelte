@@ -131,6 +131,10 @@
 		font-weight: 500;
 	}
 
+	.new-button:enabled:hover {
+		background-color: var(--color2);
+	}
+
 	.new {
 		text-align: center;
 	}
