@@ -14,7 +14,7 @@
 		navigate('/');
 	}
 
-	let error = '';
+	let errorMessage = '';
 
 	const verifyPrevRoom = (shouldBeDeleted: boolean) => {
 		const roomJson = localStorage.getItem('rooms');
@@ -39,13 +39,23 @@
 
 	onMount(async () => {
 		loading = true;
-		const roomDocRef = doc(db, 'rooms', roomId);
-		const roomSnap = await getDoc(roomDocRef);
-		if (!roomSnap.exists()) {
-			error = `Room "${roomId}" is Not Found!`;
-			verifyPrevRoom(true);
-		} else {
-			verifyPrevRoom(false);
+		try {
+			const roomDocRef = doc(db, 'rooms', roomId);
+			const roomSnap = await getDoc(roomDocRef);
+			if (!roomSnap.exists()) {
+				errorMessage = `Room "${roomId}" is Not Found!`;
+				verifyPrevRoom(true);
+			} else {
+				verifyPrevRoom(false);
+			}
+		} catch (err) {
+			if (err.message.includes('insufficient permissions')) {
+				errorMessage = "You Doesn't Have Permissions To Open This Room";
+				verifyPrevRoom(true);
+			} else {
+				errorMessage = 'Something Wrong!!';
+				verifyPrevRoom(false);
+			}
 		}
 		loading = false;
 	});
@@ -54,10 +64,10 @@
 <div class="room">
 	{#if loading}
 		<p class="loading-message">Loading...</p>
-	{:else if error === ''}
+	{:else if errorMessage === ''}
 		<PasteRoom {roomId} />
 	{:else}
-		<p class="error-message">{error}</p>
+		<p class="error-message">{errorMessage}</p>
 		<Link to="/">back to home</Link>
 	{/if}
 </div>

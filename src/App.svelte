@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { Router, Route } from 'svelte-navigator';
+	import { onAuthStateChanged, User } from 'firebase/auth';
 
 	import Container from './components/container.svelte';
 	import Home from './pages/home.svelte';
 	import Paste from './pages/paste.svelte';
+	import { auth } from './utils/firebase';
+
+	let authUser: User;
+	onAuthStateChanged(auth, (user) => {
+		authUser = user;
+	});
 </script>
 
 <Router>
@@ -11,7 +18,7 @@
 		<Container>
 			<Route path="/*" primary={false}>
 				<Route path="/">
-					<Home />
+					<Home user={authUser} />
 				</Route>
 				<Route path=":id">
 					<Paste />

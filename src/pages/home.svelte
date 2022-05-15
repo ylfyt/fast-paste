@@ -1,16 +1,56 @@
 <script lang="ts">
 	import { nanoid } from 'nanoid';
 	import { useNavigate, Link } from 'svelte-navigator';
-	import { setDoc, doc, getDoc } from 'firebase/firestore';
+	import { setDoc, doc, getDoc, collection, where, query, getDocs } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import { db } from '../utils/firebase';
 	import type { IRoom } from '../utils/interfaces';
 	import SendButton from '../components/send-button.svelte';
 
+	import { auth } from '../utils/firebase';
+
+	import { signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+
+	export let user: User;
+	const loginWithGoogle = async () => {
+		const provider = new GoogleAuthProvider();
+		signInWithPopup(auth, provider)
+			.then((result) => {
+				console.log('Login Success');
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+	const logout = async () => {
+		await auth.signOut();
+	};
+
+	const openMyRoom = async () => {
+		const roomId = await checkRoomExistByUserId(user.uid);
+		if (roomId == '') {
+			await createNewRoom(user.uid);
+			return;
+		}
+		navigate(`/${roomId}`);
+	};
+
 	const navigate = useNavigate();
 	let roomId = '';
 	let loading = false;
 	let error = '';
+
+	const checkRoomExistByUserId = async (userId: string): Promise<string> => {
+		try {
+			const q = query(collection(db, 'rooms'), where('userId', '==', userId));
+			const roomSnap = await getDocs(q);
+			return roomSnap.empty ? '' : roomSnap.docs[0].id;
+		} catch (error) {
+			console.log(error.message);
+			return '';
+		}
+	};
 
 	const checkRoomExist = async (newRoomId: string): Promise<boolean> => {
 		const roomDocRef = doc(db, 'rooms', newRoomId);
@@ -18,7 +58,7 @@
 		return roomSnap.exists();
 	};
 
-	const createNewRoom = async () => {
+	const createNewRoom = async (userId: string | null = null) => {
 		loading = true;
 		const newRoomId = nanoid(6);
 		const exist = await checkRoomExist(newRoomId);
@@ -29,7 +69,7 @@
 		}
 		const newRoom: IRoom = {
 			pastes: [],
-			userId: '',
+			userId: userId ?? '',
 		};
 		const roomRef = doc(db, 'rooms', newRoomId);
 		try {
@@ -67,7 +107,18 @@
 		<input type="text" placeholder="room id" bind:value={roomId} />
 		<SendButton type="submit" isBusy={loading} disabled={loading || roomId === ''} />
 	</form>
-
+	<div class="auth">
+		{#if user}
+			<button on:click={() => logout()}>Logout</button>
+			<button
+				on:click={() => {
+					openMyRoom();
+				}}>Open My Room</button
+			>
+		{:else}
+			<button on:click={() => loginWithGoogle()}>Login</button>
+		{/if}
+	</div>
 	<div class="new">
 		<button disabled={loading} class="new-button" on:click={() => createNewRoom()}>Create New Room</button>
 		{#if loading}
