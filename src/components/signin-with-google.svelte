@@ -3,6 +3,10 @@
 
 	import { auth } from '../utils/firebase';
 	import { userRoomId, authUser } from '../stores/user-store';
+	import { useNavigate } from 'svelte-navigator';
+	import createRoom from '../utils/create-room';
+
+	const navigate = useNavigate();
 
 	const loginWithGoogle = async () => {
 		const provider = new GoogleAuthProvider();
@@ -16,12 +20,24 @@
 	const logout = async () => {
 		auth.currentUser && (await auth.signOut());
 	};
+
+	const roomAction = async () => {
+		if (!$authUser) return;
+		if (!$userRoomId) {
+			userRoomId.set('');
+			const { roomId } = await createRoom($authUser.uid);
+			userRoomId.set(roomId !== '' ? roomId : null);
+			return;
+		}
+
+		if ($userRoomId != '') return navigate(`/${$userRoomId}`);
+	};
 </script>
 
 <div class="auth">
 	{#if $authUser}
-		<button on:click={() => logout()}>Logout</button>
-		<button on:click={() => {}}>
+		<button class="logout" on:click={() => logout()}>Logout</button>
+		<button on:click={() => roomAction()} disabled={$userRoomId === ''}>
 			{#if $userRoomId === null}
 				Create My Room
 			{:else if $userRoomId === ''}
@@ -52,6 +68,8 @@
 		box-shadow: 2px 4px 20px var(--darkShadow);
 		min-height: 40px;
 		background-color: var(--color1);
+		font-size: medium;
+		font-weight: 500;
 	}
 
 	button:enabled:hover {
@@ -65,5 +83,13 @@
 
 	button:disabled {
 		cursor: default;
+	}
+
+	.logout {
+		background-color: var(--color0);
+	}
+
+	.logout:enabled:hover {
+		background-color: wheat;
 	}
 </style>

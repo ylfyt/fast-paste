@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { onSnapshot, DocumentReference, doc } from 'firebase/firestore';
+	import { Link } from 'svelte-navigator';
 	import { onDestroy } from 'svelte';
 	import moment from 'moment';
+
 	import { db } from '../utils/firebase';
 	import type { IRoom } from '../utils/interfaces';
 	import Input from './input.svelte';
-	import { Link } from 'svelte-navigator';
 
 	export let roomId: string;
 

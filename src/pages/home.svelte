@@ -21,8 +21,10 @@
 		}
 	};
 
+	let roomIdInput: HTMLInputElement;
 	let prevRooms: string[] = [];
 	onMount(() => {
+		roomIdInput && roomIdInput.focus();
 		const rooms = localStorage.getItem('rooms');
 		if (!rooms) {
 			return;
@@ -41,7 +43,7 @@
 			navigate(`/${roomId}`);
 		}}
 	>
-		<input type="text" placeholder="room id" bind:value={roomId} />
+		<input bind:this={roomIdInput} type="text" placeholder="Room Id" bind:value={roomId} />
 		<SendButton type="submit" isBusy={loading} disabled={loading || roomId === ''} />
 	</form>
 	<div class="new">
