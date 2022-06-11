@@ -12,6 +12,7 @@
 	"devDependencies": {
 		"@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
 		"@tsconfig/svelte": "^2.0.1",
+		"@zerodevx/svelte-toast": "^0.7.2",
 		"firebase": "^9.7.0",
 		"moment": "^2.29.3",
 		"nanoid": "^3.3.4",

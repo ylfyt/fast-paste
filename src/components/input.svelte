@@ -3,13 +3,14 @@
 	import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 	import { nanoid } from 'nanoid';
 	import { authUser } from '../stores/user-store';
-	import { fade, scale } from 'svelte/transition';
+	import { scale } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { db, storage } from '../utils/firebase';
 	import type { IPaste } from '../utils/interfaces';
 	import SendButton from './send-button.svelte';
 	import ClipIcon from './svg-icons/clip-icon.svelte';
 	import Spinner from './spinner.svelte';
+	import { showToast } from '../utils/show-toast';
 
 	export let roomId: string;
 
@@ -45,7 +46,8 @@
 		const succes = await sendToFirestore(newPaste);
 		loading = false;
 		if (!succes) {
-			// TODO: Error
+			showToast('Failed to send paste', false);
+			return;
 		}
 		text = '';
 		updateTextarea(true);
@@ -80,6 +82,7 @@
 				id: nanoid(),
 				isFile: true,
 				filename: resFile.ref.name,
+				originalFilename: file.name,
 			};
 			return await sendToFirestore(newPaste);
 		} catch (error) {
@@ -87,21 +90,30 @@
 			return false;
 		}
 	};
-
+	const SIZE_LIMIT = 5 * 1024 * 1024;
 	let files: FileList;
-	const handleSubmitFile = async () => {
-		const file = files[0];
-		const ext = file.name.match(/\.[0-9a-z]+$/i)[0];
+	const handleSubmitFile = async (data: FileList) => {
+		if (!data) return;
 		loadingFile = true;
-		const succes = await sendFile(file, ext);
-		loadingFile = false;
+		for (let i = 0; i < data.length; i++) {
+			const file = data[i];
+			if (file.size > SIZE_LIMIT) {
+				showToast(`File size should be < 5MB<br>${file.name}`, false);
+				continue;
+			}
+			const ext = file.name.match(/\.[0-9a-z]+$/i)[0];
+			const succes = await sendFile(file, ext);
 
-		if (!succes) {
-			// TODO: Error
+			if (!succes) {
+				showToast(`Failed to upload file<br>${file.name}`, false);
+			} else {
+				showToast(`File uploaded<br>${file.name}`, true);
+			}
 		}
+		loadingFile = false;
 	};
 
-	$: files && handleSubmitFile();
+	$: files && handleSubmitFile(files);
 
 	onMount(() => {
 		textAreaElement.focus();
@@ -111,7 +123,7 @@
 <div class="form-container">
 	<form on:submit|preventDefault={() => sendPaste()}>
 		<label class="custom-file-upload">
-			<input type="file" bind:files />
+			<input multiple type="file" bind:files />
 			<ClipIcon />
 		</label>
 		<textarea bind:this={textAreaElement} rows="1" type="text" bind:value={text} placeholder="Text" />

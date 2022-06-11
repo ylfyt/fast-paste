@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import PasteRoom from '../components/paste-room.svelte';
 	import { onMount } from 'svelte';
 	import { useParams, navigate, Link } from 'svelte-navigator';
@@ -70,6 +71,7 @@
 		<Link to="/">back to home</Link>
 	{/if}
 </div>
+<SvelteToast />
 
 <style>
 	.room {

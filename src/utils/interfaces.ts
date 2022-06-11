@@ -1,9 +1,10 @@
 export interface IPaste {
 	id: string;
 	createAt: number;
-	text: string;
+	text: string; // DOWNLOAD URL FILE
 	isFile?: boolean;
 	filename?: string;
+	originalFilename?: string;
 }
 
 export interface IRoom {

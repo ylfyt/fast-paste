@@ -65,13 +65,13 @@
 							{:else}
 								<div style="display: flex; gap: 5px;">
 									<p>File:</p>
-									<a href={paste.text} target="_blank">{paste.filename}</a>
+									<a href={paste.text} target="_blank">{paste.originalFilename}</a>
 								</div>
 							{/if}
 						</div>
 						<div class="copy-text">
 							<p class="copy-message" id={`copy-message-${idx}`}>Copied</p>
-							<button class="copy-button" on:click={(e) => copyText(paste.text, idx)}>copy to clipboard</button>
+							<button class="copy-button" on:click={(e) => copyText(paste.text, idx)}>copy {paste.isFile ? 'URL' : 'text'}</button>
 						</div>
 					</div>
 				{/each}
