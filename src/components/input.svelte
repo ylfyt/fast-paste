@@ -2,7 +2,7 @@
 	import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
 	import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 	import { nanoid } from 'nanoid';
-	import { authUser } from '../stores/user-store';
+	import { authUser, userRoomId } from '../stores/user-store';
 	import { scale } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { db, storage } from '../utils/firebase';
@@ -67,7 +67,7 @@
 	};
 
 	const sendFile = async (file: File, ext: string): Promise<boolean> => {
-		const refPath = `${$authUser ? 'auth' : 'anonymous'}/${$authUser ? $authUser.uid : roomId}/${nanoid()}${ext}`;
+		const refPath = `${$userRoomId === roomId ? 'auth' : 'anonymous'}/${$userRoomId === roomId ? $authUser.uid : roomId}/${nanoid()}${ext}`;
 		const storageRef = ref(storage, refPath);
 
 		try {
@@ -91,7 +91,7 @@
 		}
 	};
 	const SIZE_LIMIT = 5 * 1024 * 1024;
-	let files: FileList;
+	let files: FileList, inputElement: HTMLInputElement;
 	const handleSubmitFile = async (data: FileList) => {
 		if (!data) return;
 		loadingFile = true;
@@ -123,7 +123,15 @@
 <div class="form-container">
 	<form on:submit|preventDefault={() => sendPaste()}>
 		<label class="custom-file-upload">
-			<input multiple type="file" bind:files />
+			<input
+				multiple
+				type="file"
+				bind:files
+				bind:this={inputElement}
+				on:click={() => {
+					inputElement.value = '';
+				}}
+			/>
 			<ClipIcon />
 		</label>
 		<textarea bind:this={textAreaElement} rows="1" type="text" bind:value={text} placeholder="Text" />
