@@ -59,7 +59,16 @@
 				{#each myRoom.pastes as paste, idx}
 					<div class="paste">
 						<div class="date">{moment.unix(paste.createAt).format('DD-MM-YYYY HH:mm:ss')}</div>
-						<div class="text">{paste.text}</div>
+						<div class="text">
+							{#if !paste.isFile}
+								{paste.text}
+							{:else}
+								<div style="display: flex; gap: 5px;">
+									<p>File:</p>
+									<a href={paste.text} target="_blank">{paste.filename}</a>
+								</div>
+							{/if}
+						</div>
 						<div class="copy-text">
 							<p class="copy-message" id={`copy-message-${idx}`}>Copied</p>
 							<button class="copy-button" on:click={(e) => copyText(paste.text, idx)}>copy to clipboard</button>

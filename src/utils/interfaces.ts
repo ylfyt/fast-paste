@@ -2,6 +2,8 @@ export interface IPaste {
 	id: string;
 	createAt: number;
 	text: string;
+	isFile?: boolean;
+	filename?: string;
 }
 
 export interface IRoom {
