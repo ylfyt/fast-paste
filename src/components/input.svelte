@@ -90,7 +90,7 @@
 			return false;
 		}
 	};
-	const SIZE_LIMIT = 5 * 1024 * 1024;
+	const SIZE_LIMIT = 5.5 * 1024 * 1024;
 	let files: FileList, inputElement: HTMLInputElement;
 	const handleSubmitFile = async (data: FileList) => {
 		if (!data) return;
