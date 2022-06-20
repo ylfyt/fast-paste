@@ -46,6 +46,7 @@
 		<SendButton type="submit" isBusy={loading} disabled={loading || roomId === ''} />
 	</form>
 	<div class="new">
+		<div class="or-text">or</div>
 		<button disabled={loading} class="new-button" on:click={() => createNewRoom()}>Create New Room</button>
 		{#if loading}
 			<p class="loading-message">Please wait...</p>

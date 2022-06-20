@@ -38,6 +38,6 @@
 	}
 
 	button:disabled {
-		cursor: default;
+		cursor: not-allowed;
 	}
 </style>
