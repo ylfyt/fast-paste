@@ -40,7 +40,7 @@
 		<div class="date">{moment.unix(paste.createAt).format('LLL')}</div>
 		<div
 			on:click={() => {
-				const yes = confirm('Test');
+				const yes = confirm('Are you sure you want to remove this paste?');
 				if (!yes) return;
 				deletePaste();
 			}}
