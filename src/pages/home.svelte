@@ -178,6 +178,7 @@
 		border: none;
 		background-color: var(--color0);
 		box-shadow: 2px 4px 20px var(--darkShadow);
+		outline: 2px solid var(--color1);
 	}
 
 	form input:focus {

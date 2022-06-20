@@ -1,8 +1,13 @@
 <script lang="ts">
+	import { doc, updateDoc } from 'firebase/firestore';
+
 	import moment from 'moment';
-	import type { IPaste } from 'src/utils/interfaces';
+	import { showToast } from '../utils/show-toast';
+	import { db } from '../utils/firebase';
+	import type { IPaste, IRoom } from '../utils/interfaces';
 
 	export let paste: IPaste;
+	export let room: IRoom;
 
 	let copied = false;
 	const copyText = () => {
@@ -15,10 +20,35 @@
 			}
 		);
 	};
+
+	const deletePaste = async () => {
+		try {
+			const newPaste = room.pastes.filter((pas) => pas.id !== paste.id);
+			const roomRef = doc(db, 'rooms', room.id);
+			await updateDoc(roomRef, {
+				pastes: newPaste,
+			});
+			showToast('Paste deleted successfully', true);
+		} catch (error) {
+			showToast('Failed to delete paste', false);
+		}
+	};
 </script>
 
 <div class="paste">
-	<div class="date">{moment.unix(paste.createAt).format('LLL')}</div>
+	<div style="display: flex; align-items: flex-start; justify-content: space-between;">
+		<div class="date">{moment.unix(paste.createAt).format('LLL')}</div>
+		<div
+			on:click={() => {
+				const yes = confirm('Test');
+				if (!yes) return;
+				deletePaste();
+			}}
+			style="height: 15px; width: 15px;user-select: none;cursor: pointer;"
+		>
+			&#x2715;
+		</div>
+	</div>
 	<div class="text">
 		{#if !paste.isFile}
 			{paste.text}

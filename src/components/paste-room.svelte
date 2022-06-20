@@ -14,6 +14,7 @@
 	const roomRef = doc(db, 'rooms', roomId) as DocumentReference<IRoom>;
 	const roomUnSub = onSnapshot(roomRef, (doc) => {
 		myRoom = doc.data();
+		myRoom.id = roomId;
 	});
 
 	onDestroy(() => {
@@ -43,7 +44,7 @@
 		{#if myRoom}
 			{#if myRoom.pastes.length != 0}
 				{#each myRoom.pastes as paste}
-					<PasteCard {paste} />
+					<PasteCard {paste} room={myRoom} />
 				{/each}
 			{:else}
 				<p style="text-align: center;">There is no data</p>
