@@ -83,6 +83,10 @@
 		flex-direction: column;
 	}
 
+	.paste:hover {
+		opacity: 75%;
+	}
+
 	.copy-message {
 		font-size: x-small;
 		color: #0f0;
