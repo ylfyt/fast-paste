@@ -2,11 +2,11 @@
 	import { onSnapshot, DocumentReference, doc } from 'firebase/firestore';
 	import { Link } from 'svelte-navigator';
 	import { onDestroy } from 'svelte';
-	import moment from 'moment';
 
 	import { db } from '../utils/firebase';
 	import type { IRoom } from '../utils/interfaces';
 	import Input from './input.svelte';
+	import PasteCard from './paste-card.svelte';
 
 	export let roomId: string;
 
@@ -29,20 +29,6 @@
 			pasteContainerElement.scrollTop = pasteContainerElement.scrollHeight;
 		}, 0);
 	};
-
-	const copyText = (text: string, idx: number) => {
-		navigator.clipboard.writeText(text).then(
-			() => {
-				const message = document.getElementById(`copy-message-${idx}`);
-				if (message) {
-					message.style.display = 'block';
-				}
-			},
-			() => {
-				alert('Failed to copy');
-			}
-		);
-	};
 </script>
 
 <svelte:head>
@@ -56,24 +42,8 @@
 	<div bind:this={pasteContainerElement} class="paste-container">
 		{#if myRoom}
 			{#if myRoom.pastes.length != 0}
-				{#each myRoom.pastes as paste, idx}
-					<div class="paste">
-						<div class="date">{moment.unix(paste.createAt).format('DD-MM-YYYY HH:mm:ss')}</div>
-						<div class="text">
-							{#if !paste.isFile}
-								{paste.text}
-							{:else}
-								<div style="display: flex; gap: 5px;">
-									<p>File:</p>
-									<a href={paste.text} target="_blank">{paste.originalFilename}</a>
-								</div>
-							{/if}
-						</div>
-						<div class="copy-text">
-							<p class="copy-message" id={`copy-message-${idx}`}>Copied</p>
-							<button class="copy-button" on:click={(e) => copyText(paste.text, idx)}>copy {paste.isFile ? 'URL' : 'text'}</button>
-						</div>
-					</div>
+				{#each myRoom.pastes as paste}
+					<PasteCard {paste} />
 				{/each}
 			{:else}
 				<p style="text-align: center;">There is no data</p>
@@ -104,10 +74,6 @@
 		text-decoration: none;
 	}
 
-	button {
-		padding: 5px 8px;
-	}
-
 	.paste-container {
 		background-color: var(--color3);
 		height: 100%;
@@ -129,59 +95,6 @@
 	}
 	.paste-container::-webkit-scrollbar-track {
 		background-color: var(--color0);
-	}
-
-	.paste {
-		margin-right: 10px;
-		margin-left: 10px;
-		border-radius: 10px;
-		padding: 5px 10px;
-		background-color: var(--color2);
-		box-shadow: 2px 3px 10px var(--darkShadow);
-		display: flex;
-		flex-direction: column;
-	}
-
-	.copy-message {
-		font-size: x-small;
-		color: #0f0;
-		display: none;
-	}
-
-	.copy-text {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 10px;
-	}
-
-	.copy-button {
-		padding: 2px 0;
-		width: 150px;
-		font-size: x-small;
-		box-shadow: 2px 3px 20px var(--darkShadow);
-		border-radius: 5px;
-		border: none;
-		background-color: var(--color4);
-		color: var(--color0);
-	}
-	.copy-button:focus {
-		border: none;
-	}
-	.copy-button:active {
-		box-shadow: none;
-	}
-
-	.paste .date {
-		text-align: start;
-		font-size: x-small;
-		color: var(--whiteColor);
-	}
-
-	.paste .text {
-		font-size: small;
-		overflow-wrap: break-word;
-		white-space: pre-wrap;
 	}
 
 	@media (max-width: 960px) {
