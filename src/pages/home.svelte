@@ -59,12 +59,24 @@
 		<SigninWithGoogle />
 	</div>
 	<div class="prev-room">
-		<div class="prev-title">Previous Room</div>
-		<div class="prev-room-container">
-			<ul>
+		<div class="prev-title" style="width: 100%; text-align: center;">Previous Room</div>
+		<div class="prev-room-container" style="width: 100%;">
+			<ul style="width: 100%;">
 				{#each prevRooms as _, idx}
-					<li>
-						<Link to={`/${prevRooms[prevRooms.length - idx - 1]}`}>{prevRooms[prevRooms.length - idx - 1]}</Link>
+					<li style="width: 100%; display: flex; justify-content: space-evenly;">
+						<div style="width: 20%;" />
+						<div style="flex: 1;text-align: center;">
+							<Link to={`/${prevRooms[prevRooms.length - idx - 1]}`}>{prevRooms[prevRooms.length - idx - 1]}</Link>
+						</div>
+						<div
+							on:click={() => {
+								prevRooms = prevRooms.filter((_, i) => i !== prevRooms.length - idx - 1);
+								localStorage.setItem('rooms', JSON.stringify(prevRooms));
+							}}
+							style="width: 20%; color: var(--color1);cursor: pointer;user-select: none;"
+						>
+							&#x2715;
+						</div>
 					</li>
 				{/each}
 			</ul>
@@ -96,6 +108,12 @@
 		flex-direction: column;
 		gap: 10px;
 		color: var(--color0);
+	}
+
+	.prev-room-container ul {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 	}
 
 	:global(a) {
