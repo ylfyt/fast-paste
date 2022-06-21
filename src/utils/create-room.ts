@@ -1,12 +1,12 @@
 import { doc, setDoc } from 'firebase/firestore';
-import { nanoid } from 'nanoid';
 
 import { db } from './firebase';
 import type { ICreateRoom, IRoom } from './interfaces';
 import checkRoomExist from './check-room-exist';
+import { customNanoid } from './custom-nanoid';
 
 const createRoom = async (userId: string | null = null): Promise<ICreateRoom> => {
-	const newRoomId = nanoid(6);
+	const newRoomId = customNanoid();
 	const exist = await checkRoomExist(newRoomId);
 	if (exist) {
 		return {
