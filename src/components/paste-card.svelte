@@ -3,8 +3,10 @@
 
 	import moment from 'moment';
 	import { showToast } from '../utils/show-toast';
-	import { db } from '../utils/firebase';
+	import { db, storage } from '../utils/firebase';
 	import type { IPaste, IRoom } from '../utils/interfaces';
+	import { deleteObject, ref } from 'firebase/storage';
+	import { authUser, userRoomId } from '../stores/user-store';
 
 	export let paste: IPaste;
 	export let room: IRoom;
@@ -19,6 +21,18 @@
 				alert('Failed to copy');
 			}
 		);
+	};
+
+	const deleteFile = () => {
+		const refPath = `${$userRoomId === room.id ? 'auth' : 'anonymous'}/${$userRoomId === room.id ? $authUser.uid : room.id}/${paste.filename}`;
+		const fileRef = ref(storage, refPath);
+		deleteObject(fileRef)
+			.then(() => {
+				deletePaste();
+			})
+			.catch(() => {
+				showToast('Failed to delete paste', false);
+			});
 	};
 
 	const deletePaste = async () => {
@@ -42,6 +56,7 @@
 			on:click={() => {
 				const yes = confirm('Are you sure you want to remove this paste?');
 				if (!yes) return;
+				if (paste.isFile) return deleteFile();
 				deletePaste();
 			}}
 			style="height: 15px; width: 15px;user-select: none;cursor: pointer;"
@@ -105,6 +120,7 @@
 		border: none;
 		background-color: var(--color4);
 		color: var(--color0);
+		cursor: pointer;
 	}
 	.copy-button:focus {
 		border: none;

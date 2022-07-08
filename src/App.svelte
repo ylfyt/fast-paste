@@ -13,11 +13,11 @@
 		authUser.set(user);
 		userRoomId.set(null);
 		if (user) {
-			console.log('User Login');
+			// console.log('User Login');
 			verifyUserRoom(user.uid);
 			return;
 		}
-		console.log('User Logout');
+		// console.log('User Logout');
 	});
 </script>
 
