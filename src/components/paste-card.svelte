@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { doc, updateDoc } from 'firebase/firestore';
 
-	import moment from 'moment';
 	import { showToast } from '../utils/show-toast';
 	import { db, storage } from '../utils/firebase';
 	import type { IPaste, IRoom } from '../utils/interfaces';
@@ -51,7 +50,7 @@
 
 <div class="paste">
 	<div style="display: flex; align-items: flex-start; justify-content: space-between;">
-		<div class="date">{moment.unix(paste.createAt).format('LLL')}</div>
+		<div class="date">{new Date(paste.createAt * 1000).toLocaleString('en-US')}</div>
 		<div
 			on:click={() => {
 				const yes = confirm('Are you sure you want to remove this paste?');
