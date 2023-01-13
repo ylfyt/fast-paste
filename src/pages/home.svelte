@@ -69,7 +69,7 @@
 							<Link to={`/${prevRooms[prevRooms.length - idx - 1]}`}>{prevRooms[prevRooms.length - idx - 1]}</Link>
 						</div>
 						<div
-							on:click={() => {
+							on:keyup={() => {
 								prevRooms = prevRooms.filter((_, i) => i !== prevRooms.length - idx - 1);
 								localStorage.setItem('rooms', JSON.stringify(prevRooms));
 							}}

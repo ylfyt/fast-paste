@@ -52,7 +52,7 @@
 	<div style="display: flex; align-items: flex-start; justify-content: space-between;">
 		<div class="date">{new Date(paste.createAt * 1000).toLocaleString('en-US')}</div>
 		<div
-			on:click={() => {
+			on:keyup={() => {
 				const yes = confirm('Are you sure you want to remove this paste?');
 				if (!yes) return;
 				if (paste.isFile) return deleteFile();
@@ -69,7 +69,7 @@
 		{:else}
 			<div style="display: flex; gap: 5px;">
 				<p>File:</p>
-				<a href={paste.text} target="_blank">{paste.originalFilename}</a>
+				<a href={paste.text} target="_blank" rel="noreferrer">{paste.originalFilename}</a>
 			</div>
 		{/if}
 	</div>
