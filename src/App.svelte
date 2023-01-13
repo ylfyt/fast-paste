@@ -12,12 +12,11 @@
 	onAuthStateChanged(auth, async (user) => {
 		authUser.set(user);
 		userRoomId.set(null);
-		if (user) {
-			// console.log('User Login');
-			verifyUserRoom(user.uid);
+		if (!user) {
 			return;
 		}
-		// console.log('User Logout');
+
+		verifyUserRoom(user.uid);
 	});
 </script>
 
