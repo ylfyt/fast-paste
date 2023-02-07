@@ -68,15 +68,15 @@
 						<div style="flex: 1;text-align: center;">
 							<Link to={`/${prevRooms[prevRooms.length - idx - 1]}`}>{prevRooms[prevRooms.length - idx - 1]}</Link>
 						</div>
-						<div
-							on:keyup={() => {
+						<button
+							on:click={() => {
 								prevRooms = prevRooms.filter((_, i) => i !== prevRooms.length - idx - 1);
 								localStorage.setItem('rooms', JSON.stringify(prevRooms));
 							}}
-							style="width: 20%; color: var(--color1);cursor: pointer;user-select: none;"
+							style="width: 20%; color: var(--color1);cursor: pointer;user-select: none; background-color: transparent; border: none; font-weight: bold;"
 						>
 							&#x2715;
-						</div>
+						</button>
 					</li>
 				{/each}
 			</ul>

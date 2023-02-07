@@ -51,17 +51,17 @@
 <div class="paste">
 	<div style="display: flex; align-items: flex-start; justify-content: space-between;">
 		<div class="date">{new Date(paste.createAt * 1000).toLocaleString('en-US')}</div>
-		<div
-			on:keyup={() => {
+		<button
+			on:click={() => {
 				const yes = confirm('Are you sure you want to remove this paste?');
 				if (!yes) return;
 				if (paste.isFile) return deleteFile();
 				deletePaste();
 			}}
-			style="height: 15px; width: 15px;user-select: none;cursor: pointer;"
+			style="height: 15px; font-weight: bold; width: 15px;user-select: none;cursor: pointer; background-color: transparent; border: none; display: flex; align-items: center; justify-content: center; "
 		>
 			&#x2715;
-		</div>
+		</button>
 	</div>
 	<div class="text">
 		{#if !paste.isFile}
